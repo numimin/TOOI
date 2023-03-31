@@ -4,7 +4,7 @@ from contours import find_contours
 import time
 import cv2 as cv
 import matplotlib.pyplot as plt
-from tracking import intersects
+from tracking import intersects, track_contours
 
 def main():
     start = time.time()
@@ -32,10 +32,10 @@ def main():
     c0 = find_contours(images[0], plants, max_x, max_y)
     c1 = find_contours(images[1], plants, max_x, max_y)
 
-start = time.time()
-for lhs in c0:
-    for rhs in c1:
-        print(intersects(lhs, rhs, max_x, max_y))
-end = time.time()
-print(end - start)
-    
+    start = time.time()
+    new_c1 = track_contours(c0, c1, max_x, max_y)
+    for i in range(len(c0)):
+        print(new_c1[i] is None)
+        print(intersects(c0[i], new_c1[i], max_x, max_y))
+    end = time.time()
+    print(end - start)

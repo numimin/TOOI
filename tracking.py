@@ -4,6 +4,9 @@ import multiprocessing_functions as mpf
 from multiprocessing.pool import Pool
 
 def intersects(lhs, rhs, max_x, max_y):
+    if lhs is None or rhs is None:
+        return False
+
     lmask = cv.cvtColor(mask_of_contour(lhs, max_x, max_y), cv.COLOR_BGR2GRAY)
     lfirst_x, lfirst_y, llast_x, llast_y = bounding_box(lhs)
     rmask = cv.cvtColor(mask_of_contour(rhs, max_x, max_y), cv.COLOR_BGR2GRAY)
@@ -26,4 +29,17 @@ def intersects(lhs, rhs, max_x, max_y):
     thread_count = 14
     params = [(lmask, rmask, first_x, first_y, last_x, last_y, thread_count, i) for i in range(thread_count)]
     pool = Pool(thread_count)
-    return any([r for r in pool.imap_unordered(mpf.retain_neighbored_process, params)])
+    return any([r for r in pool.imap_unordered(mpf.intersects_process, params)])
+
+#lhs, rhs: (Contour | None)[]
+def track_contours(lhs, rhs, max_x, max_y):
+    new_rhs = [None] * len(lhs)
+    for i in range(len(lhs)):
+        l = lhs[i]
+        if l is None:
+            continue
+        for r in rhs:
+            if intersects(l, r, max_x, max_y):
+                new_rhs[i] = r
+                break
+    return new_rhs
