@@ -97,8 +97,8 @@ def main():
         end = time.time()
         print(end - start)
 
-    contoured_images = [cv.imread(f"./img{"0" if i < 10 else ""}{i}.png") for i in range(len(images))]
-    video = cv.VideoWriter("contours.avi", 0, 1, image[0].shape)
+    contoured_images = [cv.imread(f"./img{'0' if i < 10 else ''}{i}.png") for i in range(len(images))]
+    video = cv.VideoWriter("contours.avi", -1, 20.0, (images[0].shape[1], images[0].shape[0]))
     for image in contoured_images:
         video.write(image)
     video.release()
