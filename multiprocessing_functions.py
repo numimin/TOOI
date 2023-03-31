@@ -1,5 +1,7 @@
 import numpy as np
 
+from contours import find_contours
+
 def retain_neighbored_process(params):
     image, threshold, first_x, first_y, last_x, last_y, thread_count, thread_number = params
     out = np.zeros(image.shape, np.uint8)

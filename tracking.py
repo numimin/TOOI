@@ -34,12 +34,21 @@ def intersects(lhs, rhs, max_x, max_y):
 #lhs, rhs: (Contour | None)[]
 def track_contours(lhs, rhs, max_x, max_y):
     new_rhs = [None] * len(lhs)
+    not_included = [i for i in range(len(lhs))]
     for i in range(len(lhs)):
         l = lhs[i]
         if l is None:
             continue
-        for r in rhs:
+        for j in range(len(rhs)):
+            r = rhs[j]
             if intersects(l, r, max_x, max_y):
-                new_rhs[i] = r
+                if j in not_included:
+                    new_rhs[i] = r
+                    not_included.remove(j)
                 break
+    j = 0
+    for i in range(len(rhs)):
+        if new_rhs[i] is None:
+            new_rhs[i] = rhs[not_included[j]]
+            j += 1
     return new_rhs
