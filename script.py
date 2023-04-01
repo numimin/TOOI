@@ -77,17 +77,19 @@ def main():
     plt.plot([i for i in range(len(images))], areas)
     plt.savefig("areas.png")
 
-plt.clf()
-for j in range(7):
-    centers = []
-    for i in range(len(new_all_contours)):
-        contour = new_all_contours[i][j]
-        contour = contour.reshape((contour.shape[0], 2))
-        centers.append(sum(contour) / len(contour))
-        centers[i] -= centers[0]
-    data = np.array(centers)
-    plt.plot(data[:, 0], data[:, 1])
+    plt.clf()
+    for j in range(7):
+        centers = []
+        for i in range(len(new_all_contours)):
+            contour = new_all_contours[i][j]
+            contour = contour.reshape((contour.shape[0], 2))
+            centers.append(sum(contour) / len(contour))
+            if i == 0:
+                first_center = [centers[0][0], centers[0][1]]
+            centers[i] -= first_center
+        data = np.array(centers)
+        plt.plot(data[:, 0], data[:, 1])
 
-plt.savefig(f"centers_from_one_point.png")
-plt.draw()
-plt.show()
+    plt.savefig(f"centers_from_one_point.png")
+    plt.draw()
+    plt.show()
